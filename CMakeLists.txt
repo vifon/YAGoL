@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.8)
+project(yagol)
+add_definitions(-Wall -Wextra -std=c++11)
+set(CMAKE_C_FLAGS_DEBUG   "-DDEBUG -g3 -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -g3 -O0")
+set(CMAKE_C_FLAGS   "-O2")
+set(CMAKE_CXX_FLAGS "-O2")
+add_subdirectory(src)
