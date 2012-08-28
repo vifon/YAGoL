@@ -5,9 +5,13 @@
 
 #include <tuple>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
+    srand(time(0));
+
     std::string rules_survival = "23";
     std::string rules_birth = "3";
 

@@ -48,7 +48,7 @@ class YAGoLModel
 
     bool will_live(int x, int y) const;
 
-    // returns how many living neighbours has a given field
+    // returns how many living neighbours a given field has
     int16_t neighbours( const size_t x, const size_t y ) const;
 
     // generates diff between this generation and the next one

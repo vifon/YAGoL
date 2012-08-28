@@ -5,6 +5,8 @@
 #include "yagol_view.hpp"
 
 #include <utility>
+#include <string>
+#include <map>
 #include <cstddef>
 #include <ncurses.h>
 
@@ -18,9 +20,6 @@ class YAGoLCursesView : public YAGoLView
 
     void set_state(size_t x, size_t y, bool state);
 
-    void change_alive_char();
-    void change_dead_char();
-
     YAGoLEvent get_event();
 
     void stop();
@@ -30,9 +29,15 @@ class YAGoLCursesView : public YAGoLView
     void show();
     void close();
 
-    std::pair<int, int> get_term_size();
+    void notify(std::string message);
+    std::string prompt_for_string(std::string prompt);
+
+    std::pair<int, int> get_term_size() const;
 
   private:
+    static std::map<int, YAGoLEvent> event_map_;
+    std::map<int, YAGoLEvent>& map_events();
+
     char alive_char_;
     char dead_char_;
 };

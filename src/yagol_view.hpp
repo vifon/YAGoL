@@ -9,7 +9,7 @@
 
 //////////////////////////////////////////////////////////////////////
 
-enum class YAGoLEvent : int
+enum class YAGoLEvent : short
 {
     quit = 0,
     redraw,
@@ -19,7 +19,8 @@ enum class YAGoLEvent : int
     start_or_stop,
     step,
     null,
-    unknown
+    unknown,
+    TEST
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -48,6 +49,23 @@ class YAGoLView
     virtual void clear() = 0;
     virtual void show() = 0;
     virtual void close() = 0;
+
+    virtual void notify(std::string message) = 0;
+
+    virtual std::string prompt_for_string(std::string prompt) = 0;
+    virtual int prompt_for_number(std::string prompt) throw(std::bad_cast)
+    {
+        std::string answer = prompt_for_string(prompt);
+        int number;
+
+        try {
+            number = vfn::lexical_cast<int>(prompt);
+        } catch (const std::bad_cast& e) {
+            throw e;
+        }
+
+        return number;
+    }
 };
 
 //////////////////////////////////////////////////////////////////////
