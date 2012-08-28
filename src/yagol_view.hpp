@@ -2,19 +2,22 @@
 #ifndef _YAGOL_VIEW_H_
 #define _YAGOL_VIEW_H_
 
+#include "lexical_cast.hpp"
+
+#include <string>
 #include <cstddef>
 
 //////////////////////////////////////////////////////////////////////
 
-enum class YAGoLEvent
+enum class YAGoLEvent : int
 {
+    quit = 0,
     redraw,
     randomize,
     stop,
     start,
     start_or_stop,
     step,
-    quit,
     null,
     unknown
 };

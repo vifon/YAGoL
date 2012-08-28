@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
+#include <typeinfo>
 
 //////////////////////////////////////////////////////////////////////
 
@@ -17,10 +18,22 @@ class YAGoLController
     class unhandled_event : public std::exception
     {
       public:
+        unhandled_event(const YAGoLEvent& event)
+            : event_( event )
+        {}
+
         const char* what() const throw()
         {
             return "YAGoLController::unhandled_event";
         }
+
+        int event_id() const throw()
+        {
+            return static_cast<int>(event_);
+        }
+
+      private:
+        YAGoLEvent event_;
     };
 
     YAGoLController(YAGoLModel& model, YAGoLView& view)
@@ -67,12 +80,12 @@ class YAGoLController
                     case YAGoLEvent::unknown:
                         break;
                     default:
-                        throw unhandled_event();
+                        throw unhandled_event(event);
                         break;
                 }
-            } catch (unhandled_event& e) {
+            } catch (const unhandled_event& e) {
                 view_.close();
-                throw;
+                return e.event_id();
             }
         }
 
