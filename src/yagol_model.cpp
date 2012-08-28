@@ -120,6 +120,18 @@ YAGoLModel::board_type::iterator YAGoLModel::end()
 
 //////////////////////////////////////////////////////////////////////
 
+YAGoLModel::board_type::reference YAGoLModel::operator()(const int x, const int y)
+{
+    return board_(x,y);
+}
+
+YAGoLModel::board_type::const_reference YAGoLModel::operator()(const int x, const int y) const
+{
+    return board_(x,y);
+}
+
+//////////////////////////////////////////////////////////////////////
+
 size_t YAGoLModel::width()
 {
     return width_;

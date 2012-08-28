@@ -32,6 +32,8 @@ class YAGoLModel
     const diff_type& next_generation();
     board_type::iterator begin();
     board_type::iterator end();
+    board_type::reference operator()(const int x, const int y);
+    board_type::const_reference operator()(const int x, const int y) const;
 
     size_t width();
     size_t height();
