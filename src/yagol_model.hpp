@@ -3,6 +3,8 @@
 #define _YAGOL_MODEL_H_
 
 #include <utility>
+#include <tuple>
+#include <string>
 #include <cstdint>
 #include "boolmatrix.hpp"
 #include "sparseboolmatrix.hpp"
@@ -18,22 +20,25 @@ class YAGoLModel
 
     YAGoLModel( const unsigned int width,
                 const unsigned int height,
-                const char* rules_survival,
-                const char* rules_birth );
+                const std::string& rules_survival,
+                const std::string& rules_birth );
 
     YAGoLModel( const unsigned int width,
                 const unsigned int height,
                 const rules_type rules_survival,
                 const rules_type rules_birth );
 
-    // randomizes the board
-    void randomize(int range, int density = 1);
+    static std::tuple<size_t, size_t, bool> unpack_diff_iterator(const std::pair< std::pair<size_t, size_t>, bool >& iterator);
+    const diff_type& next_generation();
+    board_type::iterator begin();
+    board_type::iterator end();
 
-    diff_type::const_iterator next_generation();
+    size_t width();
+    size_t height();
 
   private:
-    unsigned int      width_;
-    unsigned int      height_;
+    size_t            width_;
+    size_t            height_;
     rules_type        rules_survival_;
     rules_type        rules_birth_;
     board_type        board_;
@@ -45,7 +50,7 @@ class YAGoLModel
     int16_t neighbours( const size_t x, const size_t y ) const;
 
     // generates diff between this generation and the next one
-    diff_type::const_iterator next_generation_stage() const;
+    const diff_type& next_generation_stage() const;
     // moves on to the next generation
     void next_generation_commit();
 };

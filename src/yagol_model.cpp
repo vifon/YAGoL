@@ -1,15 +1,12 @@
 // File: yagol_model.cpp
 #include "yagol_model.hpp"
-#ifdef DEBUG
-#include <iostream>
-#endif
 
 //////////////////////////////////////////////////////////////////////
 
 YAGoLModel::YAGoLModel( const unsigned int width,
                         const unsigned int height,
-                        const char* rules_survival,
-                        const char* rules_birth )
+                        const std::string& rules_survival,
+                        const std::string& rules_birth )
     : width_( width )
     , height_( height )
     , rules_survival_(0)
@@ -17,13 +14,13 @@ YAGoLModel::YAGoLModel( const unsigned int width,
     , board_( width_, height_ )
     , diff_()
 {
-    for (auto rule : std::string(rules_survival)) {
+    for (auto rule : rules_survival) {
         if (rule >= '0' && rule <= '9') {
             rules_survival_ |= 1 << (rule-'0');
         }
     }
 
-    for (auto rule : std::string(rules_birth)) {
+    for (auto rule : rules_birth) {
         if (rule >= '0' && rule <= '9') {
             rules_birth_ |= 1 << (rule-'0');
         }
@@ -46,9 +43,9 @@ YAGoLModel::YAGoLModel( const unsigned int width,
 
 //////////////////////////////////////////////////////////////////////
 
-int16_t YAGoLModel::neighbours( const size_t x, const size_t y ) const
+YAGoLModel::rules_type YAGoLModel::neighbours( const size_t x, const size_t y ) const
 {
-    int16_t count = 0;
+    rules_type count = 0;
 
     // iterate through 3x3 square...
     for (int i = x-1; i <= static_cast<signed int>(x+1); ++i) {
@@ -64,7 +61,7 @@ int16_t YAGoLModel::neighbours( const size_t x, const size_t y ) const
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::diff_type::const_iterator YAGoLModel::next_generation_stage() const
+const YAGoLModel::diff_type& YAGoLModel::next_generation_stage() const
 {
     diff_.clear();
 
@@ -76,40 +73,35 @@ YAGoLModel::diff_type::const_iterator YAGoLModel::next_generation_stage() const
             }
         }
     }
-    return diff_.cbegin();
+    return diff_;
 }
 
 //////////////////////////////////////////////////////////////////////
+
+std::tuple<size_t, size_t, bool> YAGoLModel::unpack_diff_iterator(const std::pair< std::pair<size_t, size_t>, bool >& iterator)
+{
+    return std::make_tuple(iterator.first.first,
+                           iterator.first.second,
+                           iterator.second);
+}
 
 void YAGoLModel::next_generation_commit()
 {
     for (auto it : diff_) {
-        size_t x = it.first.first;
-        size_t y = it.first.second;
-        bool val = it.second;
+        size_t x,y;
+        bool val;
+
+        std::tie(x,y, val) = unpack_diff_iterator(it);
 
         board_(x,y) = val;
     }
-
-#ifdef DEBUG
-    for (size_t y = 0; y < height_; ++y) {
-        for (size_t x = 0; x < width_; ++x) {
-            if (board_(x,y)) {
-                std::cout << '@';
-            } else {
-                std::cout << ' ';
-            }
-        }
-        std::cout << std::endl;
-    }
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::diff_type::const_iterator YAGoLModel::next_generation()
+const YAGoLModel::diff_type& YAGoLModel::next_generation()
 {
-    auto diff = next_generation_stage();
+    auto& diff = next_generation_stage();
     next_generation_commit();
 
     return diff;
@@ -117,11 +109,24 @@ YAGoLModel::diff_type::const_iterator YAGoLModel::next_generation()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLModel::randomize(int range, int density)
+YAGoLModel::board_type::iterator YAGoLModel::begin()
 {
-    for (auto it : board_) {
-        it = (std::rand() % range) < density;
-    }
+    return board_.begin();
+}
+YAGoLModel::board_type::iterator YAGoLModel::end()
+{
+    return board_.end();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+size_t YAGoLModel::width()
+{
+    return width_;
+}
+size_t YAGoLModel::height()
+{
+    return height_;
 }
 
 //////////////////////////////////////////////////////////////////////
