@@ -4,8 +4,6 @@
 
 #include <vector>
 
-#include <iostream>
-
 //////////////////////////////////////////////////////////////////////
 
 class BoolMatrix : public std::vector<bool>
