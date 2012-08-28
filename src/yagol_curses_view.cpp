@@ -74,11 +74,11 @@ YAGoLEvent YAGoLCursesView::get_event()
 
 void YAGoLCursesView::stop()
 {
-    ::timeout(50);
+    ::timeout(-1);
 }
 void YAGoLCursesView::start()
 {
-    ::timeout(-1);
+    ::timeout(50);
 }
 
 //////////////////////////////////////////////////////////////////////

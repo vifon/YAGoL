@@ -62,8 +62,9 @@ class YAGoLController
                         break;
                     case YAGoLEvent::step:
                     case YAGoLEvent::null:
-                    case YAGoLEvent::unknown:
                         step();
+                        break;
+                    case YAGoLEvent::unknown:
                         break;
                     default:
                         throw unhandled_event();
