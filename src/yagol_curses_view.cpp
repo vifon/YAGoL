@@ -3,7 +3,6 @@
 
 #include <tuple>
 #include <list>
-#include <algorithm>
 #include <cctype>
 
 //////////////////////////////////////////////////////////////////////
@@ -172,6 +171,7 @@ static inline void move_rel(WINDOW* window, const int y_move, const int x_move)
                   x + x_move);
 }
 
+// TODO
 std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigned int width)
 {
     int w,h;
