@@ -5,10 +5,7 @@
 #include "yagol_model.hpp"
 #include "yagol_view.hpp"
 
-#include <cstddef>
-#include <cstdlib>
 #include <exception>
-#include <typeinfo>
 
 //////////////////////////////////////////////////////////////////////
 
@@ -47,7 +44,7 @@ class YAGoLController
 
     void stop();
     void start();
-    void start_or_stop();
+    void toggle();
 
     void step();
 
@@ -59,8 +56,6 @@ class YAGoLController
 
     YAGoLModel& model_;
     YAGoLView& view_;
-
-    bool started_;
 };
 
 //////////////////////////////////////////////////////////////////////

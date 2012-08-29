@@ -3,6 +3,7 @@ set(yagol_SOURCES
   yagol_curses_view.cpp
   yagol_main.cpp
   yagol_model.cpp
+  yagol_view.cpp
   )
 
 set(yagol_HEADERS

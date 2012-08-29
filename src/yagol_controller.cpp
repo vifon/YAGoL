@@ -1,14 +1,17 @@
 // File: yagol_controller.cpp
 #include "yagol_controller.hpp"
 
+#include <cstddef>
+#include <cstdlib>
+#include <stdexcept>
+
 //////////////////////////////////////////////////////////////////////
 
 YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
     : model_( model )
     , view_( view )
-    , started_ ( false )
 {
-    randomize(5);
+    randomize(5, 1);            // 1/5: 20% alive, 80% dead
 
     redraw();
 }
@@ -26,7 +29,7 @@ int YAGoLController::event_loop()
                     redraw();
                     break;
                 case YAGoLEvent::randomize:
-                    randomize(5);
+                    randomize();
                     redraw();
                     break;
                 case YAGoLEvent::stop:
@@ -35,12 +38,8 @@ int YAGoLController::event_loop()
                 case YAGoLEvent::start:
                     start();
                     break;
-                case YAGoLEvent::start_or_stop:
-                    start_or_stop();
-                    break;
-                case YAGoLEvent::TEST: // TODO
-                    notify("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
-                    redraw();
+                case YAGoLEvent::toggle:
+                    toggle();
                     break;
                 case YAGoLEvent::null:
                 case YAGoLEvent::step:
@@ -55,7 +54,7 @@ int YAGoLController::event_loop()
         } catch (const unhandled_event& e) {
             view_.close();
             return e.event_id();
-        } catch (const std::bad_cast& e) {
+        } catch (const std::invalid_argument& e) {
             notify("error");
         }
     }
@@ -88,21 +87,14 @@ void YAGoLController::redraw()
 void YAGoLController::stop()
 {
     view_.stop();
-    started_ = false;
 }
 void YAGoLController::start()
 {
     view_.start();
-    started_ = true;
 }
-void YAGoLController::start_or_stop()
+void YAGoLController::toggle()
 {
-    if (started_) {
-        view_.stop();
-    } else {
-        view_.start();
-    }
-    started_ = !started_;
+    view_.toggle();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -147,6 +139,7 @@ void YAGoLController::randomize()
 
 void YAGoLController::notify(const std::string& message)
 {
+    redraw();
     view_.notify(message);
     redraw();
 }
