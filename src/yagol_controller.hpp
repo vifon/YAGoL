@@ -53,9 +53,21 @@ class YAGoLController
 
     void notify(const std::string& message);
 
+    typedef useconds_t time_type;
+    void wait(const time_type t);
+
+    ////////////////////////////////////////
 
     YAGoLModel& model_;
     YAGoLView& view_;
+
+    ////////////////////////////////////////
+
+    static const time_type SLOW   = 150 * 1000;
+    static const time_type NORMAL =  75 * 1000;
+    static const time_type FAST   =  25 * 1000;
+
+    time_type current_pace_;
 };
 
 //////////////////////////////////////////////////////////////////////

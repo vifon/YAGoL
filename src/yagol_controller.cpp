@@ -11,6 +11,7 @@
 YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
     : model_( model )
     , view_( view )
+    , current_pace_( NORMAL )
 {
     randomize(5, 1);            // 1/5: 20% alive, 80% dead
 
@@ -59,7 +60,7 @@ int YAGoLController::event_loop()
             notify("error");
         }
 
-        usleep(75 * 1000);
+        wait(current_pace_);
     }
 
     return 0;
@@ -145,4 +146,11 @@ void YAGoLController::notify(const std::string& message)
     redraw();
     view_.notify(message);
     redraw();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void YAGoLController::wait(const time_type t)
+{
+    ::usleep(t);
 }
