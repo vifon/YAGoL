@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <stdexcept>
+#include <unistd.h>
 
 //////////////////////////////////////////////////////////////////////
 
@@ -57,6 +58,8 @@ int YAGoLController::event_loop()
         } catch (const std::invalid_argument& e) {
             notify("error");
         }
+
+        usleep(75 * 1000);
     }
 
     return 0;

@@ -74,7 +74,7 @@ void YAGoLCursesView::stop()
 void YAGoLCursesView::start()
 {
     // one frame per 50 ms or 20 frames per second
-    ::timeout(50);
+    ::timeout(0);
     auto_ = true;
 }
 
