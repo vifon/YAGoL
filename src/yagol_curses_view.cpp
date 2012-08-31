@@ -107,7 +107,6 @@ static inline int center_window(const int screen_size, const int win_size)
     return ( ( screen_size - (win_size+2) ) / 2 );
 }
 
-// uses C++11 move semantics so copying the list is not a problem
 static std::list<std::string> split_at_N_char(std::string& str, const unsigned int width)
 {
     std::list<std::string> lines;
