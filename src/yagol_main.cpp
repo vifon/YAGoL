@@ -25,9 +25,7 @@ int main(int argc, char *argv[])
 
     YAGoLCursesView view;
 
-    int width, heigth;
-    std::tie(width, heigth) = view.get_term_size();
-    YAGoLModel model(width, heigth, rules_survival, rules_birth);
+    YAGoLModel model(rules_survival, rules_birth);
 
     YAGoLController controller(model, view);
 

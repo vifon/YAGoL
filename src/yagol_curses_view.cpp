@@ -118,7 +118,7 @@ void YAGoLCursesView::notify(std::string message, const int width)
 {
     int w,h;
 
-    std::tie(w,h) = get_term_size();
+    std::tie(w,h) = get_size();
 
     std::list<std::string> lines = split_at_N_char(message, width);
 
@@ -166,7 +166,7 @@ std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigne
 {
     int w,h;
 
-    std::tie(w,h) = get_term_size();
+    std::tie(w,h) = get_size();
 
     std::list<std::string> lines = split_at_N_char(prompt, width);
 
@@ -228,7 +228,7 @@ std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigne
 
 //////////////////////////////////////////////////////////////////////
 
-std::pair<int, int> YAGoLCursesView::get_term_size() const
+std::pair<int, int> YAGoLCursesView::get_size() const
 {
     return std::make_pair(COLS, LINES);
 }

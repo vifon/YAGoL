@@ -50,8 +50,11 @@ class YAGoLController
 
     void randomize(int range, int density = 1);
     void randomize();
+    void randomize_with_prompt();
 
     void notify(const std::string& message);
+
+    void resize();
 
     typedef useconds_t time_type;
     void wait(const time_type t);
@@ -71,6 +74,10 @@ class YAGoLController
 
     time_type current_speed_;
     bool      stopped_;
+
+    // used for resize
+    int last_range_;
+    int last_density_;
 };
 
 //////////////////////////////////////////////////////////////////////

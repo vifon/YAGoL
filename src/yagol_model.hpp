@@ -18,15 +18,15 @@ class YAGoLModel
     typedef BoolMatrix       board_type;
     typedef int16_t          rules_type;
 
-    YAGoLModel( const unsigned int width,
-                const unsigned int height,
-                const std::string& rules_survival,
-                const std::string& rules_birth );
+    YAGoLModel( const std::string& rules_survival = "23",
+                const std::string& rules_birth    = "3",
+                const unsigned int width  = 1,
+                const unsigned int height = 1 );
 
-    YAGoLModel( const unsigned int width,
-                const unsigned int height,
-                const rules_type rules_survival,
-                const rules_type rules_birth );
+    YAGoLModel( const rules_type rules_survival = 2|3,
+                const rules_type rules_birth    = 3,
+                const unsigned int width  = 1,
+                const unsigned int height = 1 );
 
     static std::tuple<size_t, size_t, bool> unpack_diff_iterator(const std::pair< std::pair<size_t, size_t>, bool >& iterator);
     const diff_type& next_generation();
@@ -35,12 +35,12 @@ class YAGoLModel
     board_type::reference operator()(const int x, const int y);
     board_type::const_reference operator()(const int x, const int y) const;
 
-    size_t width();
-    size_t height();
+    void resize(const size_t w, const size_t h);
+
+    size_t width() const;
+    size_t height() const;
 
   private:
-    size_t            width_;
-    size_t            height_;
     rules_type        rules_survival_;
     rules_type        rules_birth_;
     board_type        board_;

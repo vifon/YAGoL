@@ -56,6 +56,8 @@ class YAGoLView
 
     virtual std::string prompt_for_string(std::string prompt, const unsigned int width = 50) = 0;
     virtual int prompt_for_number(std::string prompt, const unsigned int width = 50) throw(std::invalid_argument);
+
+    virtual std::pair<int, int> get_size() const = 0;
 };
 
 //////////////////////////////////////////////////////////////////////

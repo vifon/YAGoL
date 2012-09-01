@@ -3,15 +3,13 @@
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::YAGoLModel( const unsigned int width,
-                        const unsigned int height,
-                        const std::string& rules_survival,
-                        const std::string& rules_birth )
-    : width_( width )
-    , height_( height )
-    , rules_survival_(0)
+YAGoLModel::YAGoLModel( const std::string& rules_survival,
+                        const std::string& rules_birth,
+                        const unsigned int width,
+                        const unsigned int height )
+    : rules_survival_(0)
     , rules_birth_(0)
-    , board_( width_, height_ )
+    , board_( width, height )
     , diff_()
 {
     for (auto rule : rules_survival) {
@@ -29,15 +27,13 @@ YAGoLModel::YAGoLModel( const unsigned int width,
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::YAGoLModel( const unsigned int width,
-                        const unsigned int height,
-                        const rules_type rules_survival,
-                        const rules_type rules_birth )
-    : width_( width )
-    , height_( height )
-    , rules_survival_( rules_survival )
+YAGoLModel::YAGoLModel( const rules_type rules_survival,
+                        const rules_type rules_birth,
+                        const unsigned int width,
+                        const unsigned int height )
+    : rules_survival_( rules_survival )
     , rules_birth_( rules_birth )
-    , board_( width_, height_ )
+    , board_( width, height )
     , diff_()
 {}
 
@@ -65,8 +61,8 @@ const YAGoLModel::diff_type& YAGoLModel::next_generation_stage() const
 {
     diff_.clear();
 
-    for (size_t y = 0; y < height_; ++y) {
-        for (size_t x = 0; x < width_; ++x) {
+    for (size_t y = 0; y < height(); ++y) {
+        for (size_t x = 0; x < width(); ++x) {
             bool new_state = will_live(x,y);
             if ( new_state != board_(x,y) ) {
                 diff_.set( x,y, new_state );
@@ -132,13 +128,20 @@ YAGoLModel::board_type::const_reference YAGoLModel::operator()(const int x, cons
 
 //////////////////////////////////////////////////////////////////////
 
-size_t YAGoLModel::width()
+size_t YAGoLModel::width() const
 {
-    return width_;
+    return board_.width();
 }
-size_t YAGoLModel::height()
+size_t YAGoLModel::height() const
 {
-    return height_;
+    return board_.height();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void YAGoLModel::resize(const size_t w, const size_t h)
+{
+    board_.resize(w,h);
 }
 
 //////////////////////////////////////////////////////////////////////

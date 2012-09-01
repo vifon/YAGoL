@@ -3,6 +3,7 @@
 #define _BOOLMATRIX_H_
 
 #include <vector>
+#include <utility>
 
 //////////////////////////////////////////////////////////////////////
 
@@ -14,6 +15,13 @@ class BoolMatrix : public std::vector<bool>
         , width_(w)
         , height_(h)
     {}
+
+    BoolMatrix(const size_t w, const size_t h, const bool val)
+        : std::vector<bool>(w * h, val)
+        , width_(w)
+        , height_(h)
+    {}
+
 
     ////////////////////////////////////////
 
@@ -33,6 +41,32 @@ class BoolMatrix : public std::vector<bool>
         y = y % height_;
 
         return at(x + y*width_);
+    }
+
+    ////////////////////////////////////////
+
+    void resize(const size_t w, const size_t h)
+    {
+        BoolMatrix tmp(w,h, false);
+
+        for (size_t y = 0; y < height_; ++y) {
+            for (size_t x = 0; x < width_; ++x) {
+                tmp(x,y) = (*this)(x,y);
+            }
+        }
+
+        *this = tmp;
+    }
+
+    ////////////////////////////////////////
+
+    size_t width() const
+    {
+        return width_;
+    }
+    size_t height() const
+    {
+        return height_;
     }
 
   private:

@@ -34,7 +34,7 @@ class YAGoLCursesView : public YAGoLView
     void notify(std::string message, const int width = 50);
     std::string prompt_for_string(std::string prompt, const unsigned int width = 50);
 
-    std::pair<int, int> get_term_size() const;
+    std::pair<int, int> get_size() const;
 
   private:
     static const std::map<int, YAGoLEvent> event_map_;
