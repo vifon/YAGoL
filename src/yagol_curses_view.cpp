@@ -161,7 +161,6 @@ static inline void move_rel(WINDOW* window, const int y_move, const int x_move)
                   x + x_move);
 }
 
-// TODO
 std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigned int width)
 {
     int w,h;
@@ -196,28 +195,22 @@ std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigne
 
     // prepare for input
     wtimeout(subwindow, -1);
+    echo();
+    keypad(subwindow, 1);
     curs_set(1);
     wrefresh(window);
     touchwin(window);
     wrefresh(subwindow);
-    wmove(subwindow, height-1, 0);
 
-    const int KEY_BACKSPACE2 = '';
+    char* input = new char[width];
 
-    int k;
-    while (( k = wgetch(subwindow) ) != '\n') {
-        if (std::isprint(k) && prompt.size() < width-2) {
-            waddch(subwindow, k);
-            prompt += k;
-        } else if (!prompt.empty() &&
-                   (k == KEY_BACKSPACE || k == KEY_BACKSPACE2)) {
-            move_rel(subwindow, 0,-1);
-            waddch(subwindow, ' ');
-            move_rel(subwindow, 0,-1);
-            prompt.pop_back();
-        }
-    }
+    mvwgetnstr(subwindow, height-1, 0, input, width);
+
+    prompt.assign(input);
+    delete[] input;
+
     wattroff(subwindow, A_UNDERLINE);
+    noecho();
     curs_set(0);
 
     delwin(subwindow);
