@@ -3,6 +3,7 @@
 
 #include <tuple>
 #include <list>
+#include <stdexcept>
 #include <cctype>
 
 //////////////////////////////////////////////////////////////////////
@@ -10,14 +11,13 @@
 YAGoLCursesView::YAGoLCursesView(char alive_char, char dead_char)
     : alive_char_( alive_char )
     , dead_char_( dead_char )
-    , auto_ ( false )
 {
     ::initscr();
     ::cbreak();
     ::noecho();
     ::start_color();
     ::keypad(stdscr, 1);
-    ::timeout(-1);
+    ::timeout(0);
     ::curs_set(0);
     ::refresh();
 }
@@ -48,35 +48,26 @@ YAGoLEvent YAGoLCursesView::get_event()
 
     short key = getch();
 
-    if (event_map_.count(key) != 0) {
-        event = event_map_[key];
-    } else {
-        event = YAGoLEvent::unknown;
+    try {
+        event = event_map_.at(key);
+    } catch (const std::out_of_range& e) {
+        event = YAGoLEvent(YAGoLEventType::unknown);
     }
 
     return event;
 }
 
-//////////////////////////////////////////////////////////////////////
-
-bool YAGoLCursesView::started() const
-{
-    return auto_;
-}
-
-//////////////////////////////////////////////////////////////////////
-
-void YAGoLCursesView::stop()
-{
-    ::timeout(-1);
-    auto_ = false;
-}
-void YAGoLCursesView::start()
-{
-    // one frame per 50 ms or 20 frames per second
-    ::timeout(0);
-    auto_ = true;
-}
+const std::map<int, YAGoLEvent> YAGoLCursesView::event_map_ =
+{ { '1'        , YAGoLEvent( YAGoLEventType::speed     , 1  ) }  ,
+  { '2'        , YAGoLEvent( YAGoLEventType::speed     , 2  ) }  ,
+  { '3'        , YAGoLEvent( YAGoLEventType::speed     , 3  ) }  ,
+  { ' '        , YAGoLEvent( YAGoLEventType::toggle         ) }  ,
+  { 'q'        , YAGoLEvent( YAGoLEventType::quit           ) }  ,
+  { 'R'        , YAGoLEvent( YAGoLEventType::randomize      ) }  ,
+  { 'r'        , YAGoLEvent( YAGoLEventType::redraw         ) }  ,
+  { 's'        , YAGoLEvent( YAGoLEventType::step           ) }  ,
+  { ERR        , YAGoLEvent( YAGoLEventType::null           ) }  ,
+  { KEY_RESIZE , YAGoLEvent( YAGoLEventType::resize         ) } };
 
 //////////////////////////////////////////////////////////////////////
 
@@ -241,13 +232,3 @@ std::pair<int, int> YAGoLCursesView::get_term_size() const
 {
     return std::make_pair(COLS, LINES);
 }
-
-//////////////////////////////////////////////////////////////////////
-
-std::map<int, YAGoLEvent> YAGoLCursesView::event_map_ =
-    { { ' ' , YAGoLEvent::toggle    }  ,
-      { 'q' , YAGoLEvent::quit      }  ,
-      { 'R' , YAGoLEvent::randomize }  ,
-      { 'r' , YAGoLEvent::redraw    }  ,
-      { 's' , YAGoLEvent::step      }  ,
-      { -1  , YAGoLEvent::null      } };

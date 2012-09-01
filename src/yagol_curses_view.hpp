@@ -37,12 +37,10 @@ class YAGoLCursesView : public YAGoLView
     std::pair<int, int> get_term_size() const;
 
   private:
-    static std::map<int, YAGoLEvent> event_map_;
+    static const std::map<int, YAGoLEvent> event_map_;
 
     char alive_char_;
     char dead_char_;
-
-    bool auto_;
 };
 
 //////////////////////////////////////////////////////////////////////

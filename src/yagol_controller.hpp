@@ -15,7 +15,7 @@ class YAGoLController
     class unhandled_event : public std::exception
     {
       public:
-        unhandled_event(const YAGoLEvent& event)
+        unhandled_event(const YAGoLEventType& event)
             : event_( event )
         {}
 
@@ -30,7 +30,7 @@ class YAGoLController
         }
 
       private:
-        YAGoLEvent event_;
+        YAGoLEventType event_;
     };
 
     ////////////////////////////////////////
@@ -56,10 +56,12 @@ class YAGoLController
     typedef useconds_t time_type;
     void wait(const time_type t);
 
+    void set_speed(const int arg);
+
     ////////////////////////////////////////
 
     YAGoLModel& model_;
-    YAGoLView& view_;
+    YAGoLView&  view_;
 
     ////////////////////////////////////////
 
@@ -67,7 +69,8 @@ class YAGoLController
     static const time_type NORMAL =  75 * 1000;
     static const time_type FAST   =  25 * 1000;
 
-    time_type current_pace_;
+    time_type current_speed_;
+    bool      stopped_;
 };
 
 //////////////////////////////////////////////////////////////////////

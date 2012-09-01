@@ -11,7 +11,8 @@
 YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
     : model_( model )
     , view_( view )
-    , current_pace_( NORMAL )
+    , current_speed_( NORMAL )
+    , stopped_( true )
 {
     randomize(5, 1);            // 1/5: 20% alive, 80% dead
 
@@ -24,33 +25,40 @@ int YAGoLController::event_loop()
 {
     YAGoLEvent event;
 
-    while (( event = view_.get_event() ) != YAGoLEvent::quit) {
+    while (( event = view_.get_event() ).type != YAGoLEventType::quit) {
         try {
-            switch (event) {
-                case YAGoLEvent::redraw:
+            switch (event.type) {
+                case YAGoLEventType::redraw:
                     redraw();
                     break;
-                case YAGoLEvent::randomize:
+                case YAGoLEventType::randomize:
                     randomize();
                     redraw();
                     break;
-                case YAGoLEvent::stop:
+                case YAGoLEventType::stop:
                     stop();
                     break;
-                case YAGoLEvent::start:
+                case YAGoLEventType::start:
                     start();
                     break;
-                case YAGoLEvent::toggle:
+                case YAGoLEventType::toggle:
                     toggle();
                     break;
-                case YAGoLEvent::null:
-                case YAGoLEvent::step:
+                case YAGoLEventType::speed:
+                    set_speed(event.arg);
+                    break;
+                case YAGoLEventType::null:
+                    if (!stopped_) {
+                        step();
+                    }
+                    break;
+                case YAGoLEventType::step:
                     step();
                     break;
-                case YAGoLEvent::unknown:
+                case YAGoLEventType::unknown:
                     break;
                 default:
-                    throw unhandled_event(event);
+                    throw unhandled_event(event.type);
                     break;
             }
         } catch (const unhandled_event& e) {
@@ -60,7 +68,7 @@ int YAGoLController::event_loop()
             notify("error");
         }
 
-        wait(current_pace_);
+        wait(current_speed_);
     }
 
     return 0;
@@ -90,15 +98,19 @@ void YAGoLController::redraw()
 
 void YAGoLController::stop()
 {
-    view_.stop();
+    stopped_ = true;
 }
 void YAGoLController::start()
 {
-    view_.start();
+    stopped_ = false;
 }
 void YAGoLController::toggle()
 {
-    view_.toggle();
+    if (stopped_) {
+        start();
+    } else {
+        stop();
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -152,5 +164,25 @@ void YAGoLController::notify(const std::string& message)
 
 void YAGoLController::wait(const time_type t)
 {
-    ::usleep(t);
+    usleep(t);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void YAGoLController::set_speed(const int arg)
+{
+    switch (arg) {
+        case 1:
+            current_speed_ = SLOW;
+            break;
+        case 2:
+            current_speed_ = NORMAL;
+            break;
+        case 3:
+            current_speed_ = FAST;
+            break;
+        default:
+            throw std::invalid_argument("YAGoLController::set_speed");
+            break;
+    }
 }

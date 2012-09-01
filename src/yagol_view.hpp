@@ -8,17 +8,31 @@
 
 //////////////////////////////////////////////////////////////////////
 
-enum class YAGoLEvent : short
+enum class YAGoLEventType : short
 {
     quit = 0,
     redraw,
+    resize,
     randomize,
     stop,
     start,
     toggle,
     step,
+    speed,
     null,
     unknown
+};
+
+struct YAGoLEvent
+{
+    YAGoLEventType type;
+    int arg;
+
+    YAGoLEvent(const YAGoLEventType init_type = YAGoLEventType::null,
+               const int            init_arg  = 0)
+        : type( init_type )
+        , arg ( init_arg  )
+    {}
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -34,14 +48,8 @@ class YAGoLView
 
     virtual YAGoLEvent get_event() = 0;
 
-    virtual bool started() const = 0;
-
-    virtual void stop() = 0;
-    virtual void start() = 0;
-    void toggle();
-
     virtual void clear() = 0;
-    virtual void show() = 0;
+    virtual void show()  = 0;
     virtual void close() = 0;
 
     virtual void notify(std::string message, const int width = 50) = 0;
