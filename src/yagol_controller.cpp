@@ -53,9 +53,8 @@ int YAGoLController::event_loop()
                     resize();
                     break;
                 case YAGoLEventType::null:
-                    if (!stopped_) {
+                    if (!stopped_)
                         step();
-                    }
                     break;
                 case YAGoLEventType::step:
                     step();
@@ -155,11 +154,20 @@ void YAGoLController::randomize()
 
 void YAGoLController::randomize_with_prompt()
 {
-    // TODO
-    int range = view_.prompt_for_number("range");
+    std::string ratio = view_.prompt_for_string("Randomize: specify the alive/dead ratio");
     redraw();
-    int density = view_.prompt_for_number("density");
-    redraw();
+
+    size_t pos;
+    int density = std::stoul(ratio, &pos);
+    if (ratio[pos] != '/') {
+        throw std::invalid_argument("YAGoLController::randomize_with_prompt");
+    }
+
+    std::string second_number = ratio.substr(pos+1);
+    int range = std::stoul(second_number, &pos);
+    if (second_number[pos] != '\0') {
+        throw std::invalid_argument("YAGoLController::randomize_with_prompt");
+    }
 
     randomize(range, density);
 }
