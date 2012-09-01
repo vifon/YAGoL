@@ -25,7 +25,7 @@ int YAGoLView::prompt_for_number(std::string prompt, const unsigned int width) t
     int number;
 
     size_t pos;
-    number = std::stoi(prompt, &pos);
+    number = std::stoi(answer, &pos);
     if (prompt[pos] != '\0') { // more strict "convertability" test
         throw std::invalid_argument("YAGoLView::prompt_for_number");
     }
