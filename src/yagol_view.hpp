@@ -19,6 +19,7 @@ enum class YAGoLEventType : short
     toggle,
     step,
     speed,
+    change_rules,
     null,
     unknown
 };
@@ -55,6 +56,7 @@ class YAGoLView
     virtual void notify(std::string message, const int width = 50) = 0;
 
     virtual std::string prompt_for_string(std::string prompt, const unsigned int width = 50) = 0;
+    virtual std::pair<int, int> prompt_for_numbers_with_slash(std::string prompt, const unsigned int width = 50);
     virtual int prompt_for_number(std::string prompt, const unsigned int width = 50) throw(std::invalid_argument);
 
     virtual std::pair<int, int> get_size() const = 0;

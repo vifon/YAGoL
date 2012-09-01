@@ -66,6 +66,7 @@ const std::map<int, YAGoLEvent> YAGoLCursesView::event_map_ =
   { 'R'        , YAGoLEvent( YAGoLEventType::randomize      ) }  ,
   { 'r'        , YAGoLEvent( YAGoLEventType::redraw         ) }  ,
   { 's'        , YAGoLEvent( YAGoLEventType::step           ) }  ,
+  { 'u'        , YAGoLEvent( YAGoLEventType::change_rules   ) }  ,
   { ERR        , YAGoLEvent( YAGoLEventType::null           ) }  ,
   { KEY_RESIZE , YAGoLEvent( YAGoLEventType::resize         ) } };
 

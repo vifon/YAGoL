@@ -14,6 +14,8 @@ YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
     , view_( view )
     , current_speed_( NORMAL )
     , stopped_( true )
+    , last_random_range_(1)
+    , last_random_density_(1)
 {
     resize(); // set the proper board size
     randomize(5, 1); // 1/5: 20% alive, 80% dead
@@ -48,6 +50,9 @@ int YAGoLController::event_loop()
                     break;
                 case YAGoLEventType::speed:
                     set_speed(event.arg);
+                    break;
+                case YAGoLEventType::change_rules:
+                    change_rules();
                     break;
                 case YAGoLEventType::resize:
                     resize();
@@ -137,8 +142,8 @@ void YAGoLController::step()
 
 void YAGoLController::randomize(int range, int density)
 {
-    last_range_   = range;
-    last_density_ = density;
+    last_random_range_   = range;
+    last_random_density_ = density;
     for (auto it : model_) {
         it = (std::rand() % range) < density;
     }
@@ -146,7 +151,7 @@ void YAGoLController::randomize(int range, int density)
 void YAGoLController::randomize()
 {
     for (auto it : model_) {
-        it = (std::rand() % last_range_) < last_density_;
+        it = (std::rand() % last_random_range_) < last_random_density_;
     }
 }
 
@@ -154,20 +159,10 @@ void YAGoLController::randomize()
 
 void YAGoLController::randomize_with_prompt()
 {
-    std::string ratio = view_.prompt_for_string("Randomize: specify the alive/dead ratio");
-    redraw();
+    int range;
+    int density;
 
-    size_t pos;
-    int density = std::stoul(ratio, &pos);
-    if (ratio[pos] != '/') {
-        throw std::invalid_argument("YAGoLController::randomize_with_prompt");
-    }
-
-    std::string second_number = ratio.substr(pos+1);
-    int range = std::stoul(second_number, &pos);
-    if (second_number[pos] != '\0') {
-        throw std::invalid_argument("YAGoLController::randomize_with_prompt");
-    }
+    std::tie(density, range) = view_.prompt_for_numbers_with_slash("Randomize: specify the alive/dead ratio");
 
     randomize(range, density);
 }
@@ -210,6 +205,19 @@ void YAGoLController::set_speed(const int arg)
 
 //////////////////////////////////////////////////////////////////////
 
+void YAGoLController::change_rules()
+{
+    int survival;
+    int birth;
+
+    std::tie(survival, birth) = view_.prompt_for_numbers_with_slash("Rules change: \"survival/birth\"");
+
+    model_.set_rules( std::to_string(survival),
+                      std::to_string(birth   ) );
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void YAGoLController::resize()
 {
     const size_t old_width = model_.width();
@@ -221,13 +229,13 @@ void YAGoLController::resize()
 
     for (size_t y = 0; y < old_height; ++y) {
         for (size_t x = old_width; x < model_.width(); ++x) {
-            model_(x,y) = (std::rand() % last_range_) < last_density_;
+            model_(x,y) = (std::rand() % last_random_range_) < last_random_density_;
         }
     }
 
     for (size_t y = old_height; y < model_.height(); ++y) {
         for (size_t x = 0; x < model_.width(); ++x) {
-            model_(x,y) = (std::rand() % last_range_) < last_density_;
+            model_(x,y) = (std::rand() % last_random_range_) < last_random_density_;
         }
     }
 

@@ -23,8 +23,8 @@ class YAGoLModel
                 const unsigned int width  = 1,
                 const unsigned int height = 1 );
 
-    YAGoLModel( const rules_type rules_survival = 2|3,
-                const rules_type rules_birth    = 3,
+    YAGoLModel( const rules_type rules_survival,
+                const rules_type rules_birth,
                 const unsigned int width  = 1,
                 const unsigned int height = 1 );
 
@@ -36,6 +36,11 @@ class YAGoLModel
     board_type::const_reference operator()(const int x, const int y) const;
 
     void resize(const size_t w, const size_t h);
+
+    void set_rules(const std::string& rules_survival,
+                   const std::string& rules_birth);
+    void set_rules(const rules_type rules_survival,
+                   const rules_type rules_birth);
 
     size_t width() const;
     size_t height() const;
@@ -55,6 +60,8 @@ class YAGoLModel
     const diff_type& next_generation_stage() const;
     // moves on to the next generation
     void next_generation_commit();
+
+    static rules_type read_rules(const std::string& rules_string);
 };
 
 //////////////////////////////////////////////////////////////////////

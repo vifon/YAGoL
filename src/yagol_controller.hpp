@@ -61,6 +61,8 @@ class YAGoLController
 
     void set_speed(const int arg);
 
+    void change_rules();
+
     ////////////////////////////////////////
 
     YAGoLModel& model_;
@@ -76,8 +78,8 @@ class YAGoLController
     bool      stopped_;
 
     // used for resize
-    int last_range_;
-    int last_density_;
+    int last_random_range_;
+    int last_random_density_;
 };
 
 //////////////////////////////////////////////////////////////////////

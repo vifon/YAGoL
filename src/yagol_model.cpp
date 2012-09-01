@@ -7,23 +7,11 @@ YAGoLModel::YAGoLModel( const std::string& rules_survival,
                         const std::string& rules_birth,
                         const unsigned int width,
                         const unsigned int height )
-    : rules_survival_(0)
-    , rules_birth_(0)
+    : rules_survival_( read_rules(rules_survival) )
+    , rules_birth_( read_rules(rules_birth) )
     , board_( width, height )
     , diff_()
-{
-    for (auto rule : rules_survival) {
-        if (rule >= '0' && rule <= '9') {
-            rules_survival_ |= 1 << (rule-'0');
-        }
-    }
-
-    for (auto rule : rules_birth) {
-        if (rule >= '0' && rule <= '9') {
-            rules_birth_ |= 1 << (rule-'0');
-        }
-    }
-}
+{}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -146,6 +134,23 @@ void YAGoLModel::resize(const size_t w, const size_t h)
 
 //////////////////////////////////////////////////////////////////////
 
+void YAGoLModel::set_rules(const std::string& rules_survival,
+                           const std::string& rules_birth)
+{
+    rules_survival_ = read_rules(rules_survival);
+    rules_birth_    = read_rules(rules_birth);
+}
+
+
+void YAGoLModel::set_rules(const rules_type rules_survival,
+                           const rules_type rules_birth)
+{
+    rules_survival_ = rules_survival;
+    rules_birth_    = rules_birth;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 bool YAGoLModel::will_live(int x, int y) const
 {
     rules_type used_rules;
@@ -156,4 +161,19 @@ bool YAGoLModel::will_live(int x, int y) const
     }
 
     return used_rules & (1 << neighbours(x,y));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+YAGoLModel::rules_type YAGoLModel::read_rules(const std::string& rules_string)
+{
+    rules_type rules = 0;
+
+    for (auto rule : rules_string) {
+        if (rule >= '0' && rule <= '9') {
+            rules |= 1 << (rule-'0');
+        }
+    }
+
+    return rules;
 }
