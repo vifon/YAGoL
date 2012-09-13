@@ -27,8 +27,8 @@ class BoolMatrix : public std::vector<bool>
 
     std::vector<bool>::reference operator()(int x, int y)
     {
-        x = x % width_;
-        y = y % height_;
+        x = (x + width_ ) % width_;
+        y = (y + height_) % height_;
 
         return at(x + y*width_);
     }
@@ -37,8 +37,8 @@ class BoolMatrix : public std::vector<bool>
 
     std::vector<bool>::const_reference operator()(int x, int y) const
     {
-        x = x % width_;
-        y = y % height_;
+        x = (x + width_ ) % width_;
+        y = (y + height_) % height_;
 
         return at(x + y*width_);
     }
