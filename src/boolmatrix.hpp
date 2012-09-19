@@ -7,40 +7,48 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class BoolMatrix : public std::vector<bool>
+class BoolMatrix
 {
+    typedef std::vector<bool> data_type;
+
   public:
     BoolMatrix(const size_t w, const size_t h)
-        : std::vector<bool>(w * h)
-        , width_(w)
+        : width_(w)
         , height_(h)
+        , data_(w * h)
     {}
 
     BoolMatrix(const size_t w, const size_t h, const bool val)
-        : std::vector<bool>(w * h, val)
-        , width_(w)
+        : width_(w)
         , height_(h)
+        , data_(w * h, val)
     {}
-
 
     ////////////////////////////////////////
 
-    std::vector<bool>::reference operator()(int x, int y)
+    typedef data_type::reference       reference;
+    typedef data_type::const_reference const_reference;
+    typedef data_type::iterator        iterator;
+    typedef data_type::const_iterator  const_iterator;
+
+    ////////////////////////////////////////
+
+    reference operator()(int x, int y)
     {
         x = (x + width_ ) % width_;
         y = (y + height_) % height_;
 
-        return at(x + y*width_);
+        return data_.at(x + y*width_);
     }
 
     ////////////////////////////////////////
 
-    std::vector<bool>::const_reference operator()(int x, int y) const
+    const_reference operator()(int x, int y) const
     {
         x = (x + width_ ) % width_;
         y = (y + height_) % height_;
 
-        return at(x + y*width_);
+        return data_.at(x + y*width_);
     }
 
     ////////////////////////////////////////
@@ -69,9 +77,33 @@ class BoolMatrix : public std::vector<bool>
         return height_;
     }
 
+    ////////////////////////////////////////
+
+    iterator begin()
+    {
+        return data_.begin();
+    }
+    const_iterator begin() const
+    {
+        return data_.begin();
+    }
+
+    iterator end()
+    {
+        return data_.end();
+    }
+    const_iterator end() const
+    {
+        return data_.end();
+    }
+
+    ////////////////////////////////////////
+
   private:
     size_t width_;
     size_t height_;
+
+    data_type data_;
 };
 
 //////////////////////////////////////////////////////////////////////
