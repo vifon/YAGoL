@@ -6,17 +6,17 @@
 #include <tuple>
 #include <string>
 #include <cstdint>
-#include "boolmatrix.hpp"
-#include "sparseboolmatrix.hpp"
+#include "matrix.hpp"
+#include "sparsematrix.hpp"
 
 //////////////////////////////////////////////////////////////////////
 
 class YAGoLModel
 {
   public:
-    typedef SparseBoolMatrix diff_type;
-    typedef BoolMatrix       board_type;
-    typedef int16_t          rules_type;
+    typedef SparseMatrix<bool>  diff_type;
+    typedef WrappedMatrix<bool> board_type;
+    typedef int16_t             rules_type;
 
     YAGoLModel( const std::string& rules_survival = "23",
                 const std::string& rules_birth    = "3",

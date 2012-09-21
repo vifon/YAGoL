@@ -9,7 +9,7 @@ set(yagol_SOURCES
 set(yagol_HEADERS
   boolmatrix.hpp
   lexical_cast.hpp
-  sparseboolmatrix.hpp
+  sparsematrix.hpp
   yagol_controller.hpp
   yagol_curses_view.hpp
   yagol_model.hpp
