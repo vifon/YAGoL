@@ -58,8 +58,11 @@ class Matrix
     {
         Matrix tmp(w,h, false);
 
-        for (size_t y = 0; y < height_; ++y) {
-            for (size_t x = 0; x < width_; ++x) {
+        size_t common_width  = (width()  > w ? w : width());
+        size_t common_height = (height() > w ? w : height());
+
+        for (size_t y = 0; y < common_height; ++y) {
+            for (size_t x = 0; x < common_width; ++x) {
                 tmp(x,y) = (*this)(x,y);
             }
         }
