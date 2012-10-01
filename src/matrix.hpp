@@ -59,7 +59,7 @@ class Matrix
         Matrix tmp(w,h, false);
 
         size_t common_width  = (width()  > w ? w : width());
-        size_t common_height = (height() > w ? w : height());
+        size_t common_height = (height() > h ? h : height());
 
         for (size_t y = 0; y < common_height; ++y) {
             for (size_t x = 0; x < common_width; ++x) {
