@@ -61,6 +61,7 @@ const std::map<int, YAGoLEvent> YAGoLCursesView::event_map_ =
 { { '1'        , YAGoLEvent( YAGoLEventType::speed     , 1  ) }  ,
   { '2'        , YAGoLEvent( YAGoLEventType::speed     , 2  ) }  ,
   { '3'        , YAGoLEvent( YAGoLEventType::speed     , 3  ) }  ,
+  { '4'        , YAGoLEvent( YAGoLEventType::speed     , 4  ) }  ,
   { ' '        , YAGoLEvent( YAGoLEventType::toggle         ) }  ,
   { 'q'        , YAGoLEvent( YAGoLEventType::quit           ) }  ,
   { 'R'        , YAGoLEvent( YAGoLEventType::randomize      ) }  ,

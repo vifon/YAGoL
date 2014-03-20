@@ -180,7 +180,9 @@ void YAGoLController::notify(const std::string& message)
 
 void YAGoLController::wait(const time_type t)
 {
-    usleep(t);
+    if (t != INSTANT) {
+        usleep(t);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -196,6 +198,9 @@ void YAGoLController::set_speed(const int arg)
             break;
         case 3:
             current_speed_ = FAST;
+            break;
+        case 4:
+            current_speed_ = INSTANT;
             break;
         default:
             throw std::invalid_argument("YAGoLController::set_speed");

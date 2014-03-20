@@ -70,9 +70,10 @@ class YAGoLController
 
     ////////////////////////////////////////
 
-    static const time_type SLOW   = 150 * 1000;
-    static const time_type NORMAL =  75 * 1000;
-    static const time_type FAST   =  25 * 1000;
+    static const time_type SLOW    = 150 * 1000;
+    static const time_type NORMAL  =  75 * 1000;
+    static const time_type FAST    =  25 * 1000;
+    static const time_type INSTANT =   0;
 
     time_type current_speed_;
     bool      stopped_;
