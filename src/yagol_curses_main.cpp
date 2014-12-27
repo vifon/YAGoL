@@ -1,4 +1,4 @@
-// File: yagol_main.cpp
+// File: yagol_curses_main.cpp
 #include "yagol_controller.hpp"
 #include "yagol_model.hpp"
 #include "yagol_curses_view.hpp"
