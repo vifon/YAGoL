@@ -41,6 +41,11 @@ if (CURSES_FOUND)
     yagol ${CURSES_LIBRARIES})
 endif(CURSES_FOUND)
 
-add_executable(yagol_allegro ${yagol_allegro_SOURCES})
-target_link_libraries(yagol_allegro
-  yagol allegro allegro_primitives)
+find_library(allegro allegro)
+find_library(allegro_primitives allegro_primitives)
+if(allegro AND allegro_primitives)
+  add_executable(yagol_allegro ${yagol_allegro_SOURCES})
+  target_link_libraries(yagol_allegro
+    yagol
+    ${allegro} ${allegro_primitives})
+endif(allegro AND allegro_primitives)
