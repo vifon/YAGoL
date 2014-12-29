@@ -1,3 +1,5 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 set(yagol_SOURCES
   yagol_controller.cpp
   yagol_model.cpp
@@ -17,6 +19,19 @@ set(yagol_allegro_SOURCES
 add_library(yagol STATIC
   ${yagol_SOURCES})
 
+set(DISPLAY_MODE "Curses")
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/yagol_main.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/yagol_curses_main.cpp
+  @ONLY
+  )
+set(DISPLAY_MODE "Allegro")
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/yagol_main.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/yagol_allegro_main.cpp
+  @ONLY
+  )
+unset(DISPLAY_MODE)
 
 find_package(Curses)
 if (CURSES_FOUND)

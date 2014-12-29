@@ -1,0 +1,27 @@
+// File: yagol_main.cpp
+#include "yagol_controller.hpp"
+#include "yagol_model.hpp"
+#include "yagol_view.hpp"
+#include "yagol_allegro_view.hpp"
+#include "yagol_curses_view.hpp"
+
+#include <cstdlib>
+#include <ctime>
+#include <memory>
+
+int main(int argc, char *argv[])
+{
+    srand(time(0));
+
+    std::unique_ptr<YAGoLView> view(new YAGoL@DISPLAY_MODE@View);
+
+    std::unique_ptr<YAGoLModel> model;
+    if (argc == 3) {
+        model.reset(new YAGoLModel(argv[1], argv[2]));
+    } else {
+        model.reset(new YAGoLModel);
+    }
+    YAGoLController controller(*model, *view);
+
+    return controller.event_loop();
+}
