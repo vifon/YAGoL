@@ -6,9 +6,11 @@
 #include <stdexcept>
 #include <cctype>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-YAGoLCursesView::YAGoLCursesView(char alive_char, char dead_char)
+CursesView::CursesView(char alive_char, char dead_char)
     : alive_char_( alive_char )
     , dead_char_( dead_char )
 {
@@ -24,14 +26,14 @@ YAGoLCursesView::YAGoLCursesView(char alive_char, char dead_char)
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLCursesView::~YAGoLCursesView()
+CursesView::~CursesView()
 {
     close();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLCursesView::set_state(size_t x, size_t y, bool state)
+void CursesView::set_state(size_t x, size_t y, bool state)
 {
     if (state) {
         mvaddch(y,x, alive_char_);
@@ -42,52 +44,52 @@ void YAGoLCursesView::set_state(size_t x, size_t y, bool state)
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLEvent YAGoLCursesView::get_event()
+Event CursesView::get_event()
 {
-    YAGoLEvent event;
+    Event event;
 
     short key = getch();
 
     try {
         event = event_map_.at(key);
     } catch (const std::out_of_range& e) {
-        event = YAGoLEvent(YAGoLEventType::unknown);
+        event = Event(EventType::unknown);
     }
 
     return event;
 }
 
-const std::map<int, YAGoLEvent> YAGoLCursesView::event_map_ =
-{ { '1'        , YAGoLEvent( YAGoLEventType::speed     , 1  ) }  ,
-  { '2'        , YAGoLEvent( YAGoLEventType::speed     , 2  ) }  ,
-  { '3'        , YAGoLEvent( YAGoLEventType::speed     , 3  ) }  ,
-  { '4'        , YAGoLEvent( YAGoLEventType::speed     , 4  ) }  ,
-  { ' '        , YAGoLEvent( YAGoLEventType::toggle         ) }  ,
-  { 'q'        , YAGoLEvent( YAGoLEventType::quit           ) }  ,
-  { 'R'        , YAGoLEvent( YAGoLEventType::randomize      ) }  ,
-  { 'r'        , YAGoLEvent( YAGoLEventType::redraw         ) }  ,
-  { 's'        , YAGoLEvent( YAGoLEventType::step           ) }  ,
-  { 'u'        , YAGoLEvent( YAGoLEventType::change_rules   ) }  ,
-  { ERR        , YAGoLEvent( YAGoLEventType::null           ) }  ,
-  { KEY_RESIZE , YAGoLEvent( YAGoLEventType::resize         ) } };
+const std::map<int, Event> CursesView::event_map_ =
+{ { '1'        , Event( EventType::speed     , 1  ) }  ,
+  { '2'        , Event( EventType::speed     , 2  ) }  ,
+  { '3'        , Event( EventType::speed     , 3  ) }  ,
+  { '4'        , Event( EventType::speed     , 4  ) }  ,
+  { ' '        , Event( EventType::toggle         ) }  ,
+  { 'q'        , Event( EventType::quit           ) }  ,
+  { 'R'        , Event( EventType::randomize      ) }  ,
+  { 'r'        , Event( EventType::redraw         ) }  ,
+  { 's'        , Event( EventType::step           ) }  ,
+  { 'u'        , Event( EventType::change_rules   ) }  ,
+  { ERR        , Event( EventType::null           ) }  ,
+  { KEY_RESIZE , Event( EventType::resize         ) } };
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLCursesView::clear()
+void CursesView::clear()
 {
     ::clear();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLCursesView::show()
+void CursesView::show()
 {
     ::refresh();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLCursesView::close()
+void CursesView::close()
 {
     ::curs_set(1);
     ::endwin();
@@ -116,7 +118,7 @@ static std::list<std::string> split_at_N_char(std::string& str, const unsigned i
     return lines;
 }
 
-void YAGoLCursesView::notify(std::string message, const int width)
+void CursesView::notify(std::string message, const int width)
 {
     int w,h;
 
@@ -163,7 +165,7 @@ static inline void move_rel(WINDOW* window, const int y_move, const int x_move)
                   x + x_move);
 }
 
-std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigned int width)
+std::string CursesView::prompt_for_string(std::string prompt, const unsigned int width)
 {
     int w,h;
 
@@ -223,7 +225,9 @@ std::string YAGoLCursesView::prompt_for_string(std::string prompt, const unsigne
 
 //////////////////////////////////////////////////////////////////////
 
-std::pair<int, int> YAGoLCursesView::get_size() const
+std::pair<int, int> CursesView::get_size() const
 {
     return std::make_pair(COLS, LINES);
 }
+
+} // namespace yagol

@@ -7,21 +7,23 @@
 
 #include <exception>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-class YAGoLController
+class Controller
 {
   public:
     class unhandled_event : public std::exception
     {
       public:
-        unhandled_event(const YAGoLEventType& event)
+        unhandled_event(const EventType& event)
             : event_( event )
         {}
 
         const char* what() const throw()
         {
-            return "YAGoLController::unhandled_event";
+            return "Controller::unhandled_event";
         }
 
         int event_id() const throw()
@@ -30,12 +32,12 @@ class YAGoLController
         }
 
       private:
-        YAGoLEventType event_;
+        EventType event_;
     };
 
     ////////////////////////////////////////
 
-    YAGoLController(YAGoLModel& model, YAGoLView& view);
+    Controller(Model& model, View& view);
 
     int event_loop();
 
@@ -65,8 +67,8 @@ class YAGoLController
 
     ////////////////////////////////////////
 
-    YAGoLModel& model_;
-    YAGoLView&  view_;
+    Model& model_;
+    View&  view_;
 
     ////////////////////////////////////////
 
@@ -84,5 +86,7 @@ class YAGoLController
 };
 
 //////////////////////////////////////////////////////////////////////
+
+} // namespace yagol
 
 #endif

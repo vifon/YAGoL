@@ -6,9 +6,11 @@
 #include <cstddef>
 #include <stdexcept>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-enum class YAGoLEventType : short
+enum class EventType : short
 {
     quit = 0,
     redraw,
@@ -24,12 +26,12 @@ enum class YAGoLEventType : short
     unknown
 };
 
-struct YAGoLEvent
+struct Event
 {
-    YAGoLEventType type;
+    EventType type;
     int arg;
 
-    YAGoLEvent(const YAGoLEventType init_type = YAGoLEventType::null,
+    Event(const EventType init_type = EventType::null,
                const int            init_arg  = 0)
         : type( init_type )
         , arg ( init_arg  )
@@ -38,16 +40,16 @@ struct YAGoLEvent
 
 //////////////////////////////////////////////////////////////////////
 
-class YAGoLView
+class View
 {
   public:
-    virtual ~YAGoLView();
+    virtual ~View();
 
     virtual void set_state(size_t x, size_t y, bool state) = 0;
     void make_alive(size_t x, size_t y);
     void make_dead(size_t x, size_t y);
 
-    virtual YAGoLEvent get_event() = 0;
+    virtual Event get_event() = 0;
 
     virtual void clear() = 0;
     virtual void show()  = 0;
@@ -63,5 +65,7 @@ class YAGoLView
 };
 
 //////////////////////////////////////////////////////////////////////
+
+} // namespace yagol
 
 #endif

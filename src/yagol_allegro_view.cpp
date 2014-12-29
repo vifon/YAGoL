@@ -6,9 +6,11 @@
 #include <stdexcept>
 #include <cctype>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-YAGoLAllegroView::YAGoLAllegroView()
+AllegroView::AllegroView()
     : screen_w_(1280)
     , screen_h_(720)
 {
@@ -38,14 +40,14 @@ YAGoLAllegroView::YAGoLAllegroView()
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLAllegroView::~YAGoLAllegroView()
+AllegroView::~AllegroView()
 {
     close();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLAllegroView::set_state(size_t x, size_t y, bool state)
+void AllegroView::set_state(size_t x, size_t y, bool state)
 {
     if (state) {
         al_draw_bitmap(cell_bitmap_alive_, x*cell_size, y*cell_size, 0);
@@ -56,61 +58,61 @@ void YAGoLAllegroView::set_state(size_t x, size_t y, bool state)
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLEvent YAGoLAllegroView::get_event()
+Event AllegroView::get_event()
 {
-    YAGoLEvent event;
+    Event event;
 
     ALLEGRO_EVENT ev;
     bool event_received = al_get_next_event(event_queue_, &ev);
 
     if (!event_received) {
-        return YAGoLEventType::null;
+        return EventType::null;
     }
 
     if (ev.type == ALLEGRO_EVENT_KEY_CHAR) {
         try {
             event = event_map_.at(ev.keyboard.keycode);
         } catch (const std::out_of_range& e) {
-            event = YAGoLEvent(YAGoLEventType::unknown);
+            event = Event(EventType::unknown);
         }
     } else if (ev.type == ALLEGRO_EVENT_DISPLAY_EXPOSE) {
-        event = YAGoLEventType::redraw;
+        event = EventType::redraw;
     } else if (ev.type == ALLEGRO_EVENT_DISPLAY_RESIZE) {
-        event = YAGoLEventType::resize;
+        event = EventType::resize;
     } else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-        event = YAGoLEventType::quit;
+        event = EventType::quit;
     }
 
     return event;
 }
 
-const std::map<int, YAGoLEvent> YAGoLAllegroView::event_map_ =
-{ { ALLEGRO_KEY_1        , YAGoLEvent( YAGoLEventType::speed     , 1  ) }  ,
-  { ALLEGRO_KEY_2        , YAGoLEvent( YAGoLEventType::speed     , 2  ) }  ,
-  { ALLEGRO_KEY_3        , YAGoLEvent( YAGoLEventType::speed     , 3  ) }  ,
-  { ALLEGRO_KEY_4        , YAGoLEvent( YAGoLEventType::speed     , 4  ) }  ,
-  { ALLEGRO_KEY_SPACE    , YAGoLEvent( YAGoLEventType::toggle         ) }  ,
-  { ALLEGRO_KEY_Q        , YAGoLEvent( YAGoLEventType::quit           ) }  ,
-  { ALLEGRO_KEY_R        , YAGoLEvent( YAGoLEventType::randomize      ) }  ,
-  { ALLEGRO_KEY_S        , YAGoLEvent( YAGoLEventType::step           ) } };
+const std::map<int, Event> AllegroView::event_map_ =
+{ { ALLEGRO_KEY_1        , Event( EventType::speed     , 1  ) }  ,
+  { ALLEGRO_KEY_2        , Event( EventType::speed     , 2  ) }  ,
+  { ALLEGRO_KEY_3        , Event( EventType::speed     , 3  ) }  ,
+  { ALLEGRO_KEY_4        , Event( EventType::speed     , 4  ) }  ,
+  { ALLEGRO_KEY_SPACE    , Event( EventType::toggle         ) }  ,
+  { ALLEGRO_KEY_Q        , Event( EventType::quit           ) }  ,
+  { ALLEGRO_KEY_R        , Event( EventType::randomize      ) }  ,
+  { ALLEGRO_KEY_S        , Event( EventType::step           ) } };
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLAllegroView::clear()
+void AllegroView::clear()
 {
     al_clear_to_color(background_color_);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLAllegroView::show()
+void AllegroView::show()
 {
     al_flip_display();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLAllegroView::close()
+void AllegroView::close()
 {
     al_destroy_display(display_);
     al_destroy_event_queue(event_queue_);
@@ -121,14 +123,14 @@ void YAGoLAllegroView::close()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLAllegroView::notify(std::string message, const int width)
+void AllegroView::notify(std::string message, const int width)
 {
     // TODO
 }
 
 //////////////////////////////////////////////////////////////////////
 
-std::string YAGoLAllegroView::prompt_for_string(std::string prompt, const unsigned int width)
+std::string AllegroView::prompt_for_string(std::string prompt, const unsigned int width)
 {
     // TODO
     return "1/5";
@@ -136,8 +138,10 @@ std::string YAGoLAllegroView::prompt_for_string(std::string prompt, const unsign
 
 //////////////////////////////////////////////////////////////////////
 
-std::pair<int, int> YAGoLAllegroView::get_size() const
+std::pair<int, int> AllegroView::get_size() const
 {
     return std::make_pair(screen_w_ / 10,
                           screen_h_ / 10);
 }
+
+} // namespace yagol

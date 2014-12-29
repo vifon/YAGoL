@@ -13,15 +13,15 @@ int main(int argc, char *argv[])
 {
     srand(time(0));
 
-    std::unique_ptr<YAGoLView> view(new YAGoL@DISPLAY_MODE@View);
+    std::unique_ptr<yagol::View> view(new yagol::@DISPLAY_MODE@View);
 
-    std::unique_ptr<YAGoLModel> model;
+    std::unique_ptr<yagol::Model> model;
     if (argc == 3) {
-        model.reset(new YAGoLModel(argv[1], argv[2]));
+        model.reset(new yagol::Model(argv[1], argv[2]));
     } else {
-        model.reset(new YAGoLModel);
+        model.reset(new yagol::Model);
     }
-    YAGoLController controller(*model, *view);
+    yagol::Controller controller(*model, *view);
 
     return controller.event_loop();
 }

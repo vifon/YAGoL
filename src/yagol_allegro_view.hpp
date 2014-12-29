@@ -9,17 +9,19 @@
 
 #include <map>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-class YAGoLAllegroView : public YAGoLView
+class AllegroView : public View
 {
   public:
-    YAGoLAllegroView();
-    ~YAGoLAllegroView();
+    AllegroView();
+    ~AllegroView();
 
     void set_state(size_t x, size_t y, bool state);
 
-    YAGoLEvent get_event();
+    Event get_event();
 
     bool started() const;
 
@@ -36,7 +38,7 @@ class YAGoLAllegroView : public YAGoLView
     std::pair<int, int> get_size() const;
 
   private:
-    static const std::map<int, YAGoLEvent> event_map_;
+    static const std::map<int, Event> event_map_;
 
     const int screen_w_;
     const int screen_h_;
@@ -52,5 +54,7 @@ class YAGoLAllegroView : public YAGoLView
 };
 
 //////////////////////////////////////////////////////////////////////
+
+} // namespace yagol
 
 #endif

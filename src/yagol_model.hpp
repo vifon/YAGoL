@@ -9,21 +9,23 @@
 #include "matrix.hpp"
 #include "sparsematrix.hpp"
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-class YAGoLModel
+class Model
 {
   public:
     typedef SparseMatrix<bool>  diff_type;
     typedef WrappedMatrix<bool> board_type;
     typedef int16_t             rules_type;
 
-    YAGoLModel( const std::string& rules_survival = "23",
+    Model( const std::string& rules_survival = "23",
                 const std::string& rules_birth    = "3",
                 const unsigned int width  = 1,
                 const unsigned int height = 1 );
 
-    YAGoLModel( const rules_type rules_survival,
+    Model( const rules_type rules_survival,
                 const rules_type rules_birth,
                 const unsigned int width  = 1,
                 const unsigned int height = 1 );
@@ -65,5 +67,7 @@ class YAGoLModel
 };
 
 //////////////////////////////////////////////////////////////////////
+
+} // namespace yagol
 
 #endif

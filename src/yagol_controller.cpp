@@ -7,9 +7,11 @@
 #include <cstdlib>
 #include <unistd.h>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
+Controller::Controller(Model& model, View& view)
     : model_( model )
     , view_( view )
     , current_speed_( NORMAL )
@@ -25,46 +27,46 @@ YAGoLController::YAGoLController(YAGoLModel& model, YAGoLView& view)
 
 //////////////////////////////////////////////////////////////////////
 
-int YAGoLController::event_loop()
+int Controller::event_loop()
 {
-    YAGoLEvent event;
+    Event event;
 
-    while (( event = view_.get_event() ).type != YAGoLEventType::quit) {
+    while (( event = view_.get_event() ).type != EventType::quit) {
         try {
             switch (event.type) {
-                case YAGoLEventType::redraw:
+                case EventType::redraw:
                     redraw();
                     break;
-                case YAGoLEventType::randomize:
+                case EventType::randomize:
                     randomize_with_prompt();
                     redraw();
                     break;
-                case YAGoLEventType::stop:
+                case EventType::stop:
                     stop();
                     break;
-                case YAGoLEventType::start:
+                case EventType::start:
                     start();
                     break;
-                case YAGoLEventType::toggle:
+                case EventType::toggle:
                     toggle();
                     break;
-                case YAGoLEventType::speed:
+                case EventType::speed:
                     set_speed(event.arg);
                     break;
-                case YAGoLEventType::change_rules:
+                case EventType::change_rules:
                     change_rules();
                     break;
-                case YAGoLEventType::resize:
+                case EventType::resize:
                     resize();
                     break;
-                case YAGoLEventType::null:
+                case EventType::null:
                     if (!stopped_)
                         step();
                     break;
-                case YAGoLEventType::step:
+                case EventType::step:
                     step();
                     break;
-                case YAGoLEventType::unknown:
+                case EventType::unknown:
                     break;
                 default:
                     throw unhandled_event(event.type);
@@ -85,7 +87,7 @@ int YAGoLController::event_loop()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::redraw()
+void Controller::redraw()
 {
     view_.clear();
     size_t x = 0;
@@ -105,15 +107,15 @@ void YAGoLController::redraw()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::stop()
+void Controller::stop()
 {
     stopped_ = true;
 }
-void YAGoLController::start()
+void Controller::start()
 {
     stopped_ = false;
 }
-void YAGoLController::toggle()
+void Controller::toggle()
 {
     if (stopped_) {
         start();
@@ -124,13 +126,13 @@ void YAGoLController::toggle()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::step()
+void Controller::step()
 {
     for (auto it : model_.next_generation()) {
         size_t x,y;
         bool val;
 
-        std::tie(x,y, val) = YAGoLModel::unpack_diff_iterator(it);
+        std::tie(x,y, val) = Model::unpack_diff_iterator(it);
 
         view_.set_state(x,y, val);
     }
@@ -140,7 +142,7 @@ void YAGoLController::step()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::randomize(int range, int density)
+void Controller::randomize(int range, int density)
 {
     last_random_range_   = range;
     last_random_density_ = density;
@@ -148,7 +150,7 @@ void YAGoLController::randomize(int range, int density)
         it = (std::rand() % range) < density;
     }
 }
-void YAGoLController::randomize()
+void Controller::randomize()
 {
     for (auto it : model_) {
         it = (std::rand() % last_random_range_) < last_random_density_;
@@ -157,7 +159,7 @@ void YAGoLController::randomize()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::randomize_with_prompt()
+void Controller::randomize_with_prompt()
 {
     int range;
     int density;
@@ -169,7 +171,7 @@ void YAGoLController::randomize_with_prompt()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::notify(const std::string& message)
+void Controller::notify(const std::string& message)
 {
     redraw();
     view_.notify(message);
@@ -178,7 +180,7 @@ void YAGoLController::notify(const std::string& message)
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::wait(const time_type t)
+void Controller::wait(const time_type t)
 {
     if (t != INSTANT) {
         usleep(t);
@@ -187,7 +189,7 @@ void YAGoLController::wait(const time_type t)
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::set_speed(const int arg)
+void Controller::set_speed(const int arg)
 {
     switch (arg) {
         case 1:
@@ -203,14 +205,14 @@ void YAGoLController::set_speed(const int arg)
             current_speed_ = INSTANT;
             break;
         default:
-            throw std::invalid_argument("YAGoLController::set_speed");
+            throw std::invalid_argument("Controller::set_speed");
             break;
     }
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::change_rules()
+void Controller::change_rules()
 {
     int survival;
     int birth;
@@ -223,7 +225,7 @@ void YAGoLController::change_rules()
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLController::resize()
+void Controller::resize()
 {
     const size_t old_width = model_.width();
     const size_t old_height = model_.height();
@@ -246,3 +248,5 @@ void YAGoLController::resize()
 
     redraw();
 }
+
+} // namespace yagol

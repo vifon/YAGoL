@@ -1,9 +1,11 @@
 // File: yagol_model.cpp
 #include "yagol_model.hpp"
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::YAGoLModel( const std::string& rules_survival,
+Model::Model( const std::string& rules_survival,
                         const std::string& rules_birth,
                         const unsigned int width,
                         const unsigned int height )
@@ -15,7 +17,7 @@ YAGoLModel::YAGoLModel( const std::string& rules_survival,
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::YAGoLModel( const rules_type rules_survival,
+Model::Model( const rules_type rules_survival,
                         const rules_type rules_birth,
                         const unsigned int width,
                         const unsigned int height )
@@ -27,7 +29,7 @@ YAGoLModel::YAGoLModel( const rules_type rules_survival,
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::rules_type YAGoLModel::neighbours( const size_t x, const size_t y ) const
+Model::rules_type Model::neighbours( const size_t x, const size_t y ) const
 {
     rules_type count = 0;
 
@@ -45,7 +47,7 @@ YAGoLModel::rules_type YAGoLModel::neighbours( const size_t x, const size_t y ) 
 
 //////////////////////////////////////////////////////////////////////
 
-const YAGoLModel::diff_type& YAGoLModel::next_generation_stage() const
+const Model::diff_type& Model::next_generation_stage() const
 {
     diff_.clear();
 
@@ -62,14 +64,14 @@ const YAGoLModel::diff_type& YAGoLModel::next_generation_stage() const
 
 //////////////////////////////////////////////////////////////////////
 
-std::tuple<size_t, size_t, bool> YAGoLModel::unpack_diff_iterator(const std::pair< std::pair<size_t, size_t>, bool >& iterator)
+std::tuple<size_t, size_t, bool> Model::unpack_diff_iterator(const std::pair< std::pair<size_t, size_t>, bool >& iterator)
 {
     return std::make_tuple(iterator.first.first,
                            iterator.first.second,
                            iterator.second);
 }
 
-void YAGoLModel::next_generation_commit()
+void Model::next_generation_commit()
 {
     for (auto it : diff_) {
         size_t x,y;
@@ -83,7 +85,7 @@ void YAGoLModel::next_generation_commit()
 
 //////////////////////////////////////////////////////////////////////
 
-const YAGoLModel::diff_type& YAGoLModel::next_generation()
+const Model::diff_type& Model::next_generation()
 {
     auto& diff = next_generation_stage();
     next_generation_commit();
@@ -93,48 +95,48 @@ const YAGoLModel::diff_type& YAGoLModel::next_generation()
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::board_type::iterator YAGoLModel::begin()
+Model::board_type::iterator Model::begin()
 {
     return board_.begin();
 }
-YAGoLModel::board_type::iterator YAGoLModel::end()
+Model::board_type::iterator Model::end()
 {
     return board_.end();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::board_type::reference YAGoLModel::operator()(const int x, const int y)
+Model::board_type::reference Model::operator()(const int x, const int y)
 {
     return board_(x,y);
 }
 
-YAGoLModel::board_type::const_reference YAGoLModel::operator()(const int x, const int y) const
+Model::board_type::const_reference Model::operator()(const int x, const int y) const
 {
     return board_(x,y);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-size_t YAGoLModel::width() const
+size_t Model::width() const
 {
     return board_.width();
 }
-size_t YAGoLModel::height() const
+size_t Model::height() const
 {
     return board_.height();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLModel::resize(const size_t w, const size_t h)
+void Model::resize(const size_t w, const size_t h)
 {
     board_.resize(w,h);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-void YAGoLModel::set_rules(const std::string& rules_survival,
+void Model::set_rules(const std::string& rules_survival,
                            const std::string& rules_birth)
 {
     rules_survival_ = read_rules(rules_survival);
@@ -142,7 +144,7 @@ void YAGoLModel::set_rules(const std::string& rules_survival,
 }
 
 
-void YAGoLModel::set_rules(const rules_type rules_survival,
+void Model::set_rules(const rules_type rules_survival,
                            const rules_type rules_birth)
 {
     rules_survival_ = rules_survival;
@@ -151,7 +153,7 @@ void YAGoLModel::set_rules(const rules_type rules_survival,
 
 //////////////////////////////////////////////////////////////////////
 
-bool YAGoLModel::will_live(int x, int y) const
+bool Model::will_live(int x, int y) const
 {
     rules_type used_rules;
     if (board_(x,y)) {
@@ -165,7 +167,7 @@ bool YAGoLModel::will_live(int x, int y) const
 
 //////////////////////////////////////////////////////////////////////
 
-YAGoLModel::rules_type YAGoLModel::read_rules(const std::string& rules_string)
+Model::rules_type Model::read_rules(const std::string& rules_string)
 {
     rules_type rules = 0;
 
@@ -177,3 +179,5 @@ YAGoLModel::rules_type YAGoLModel::read_rules(const std::string& rules_string)
 
     return rules;
 }
+
+} // namespace yagol

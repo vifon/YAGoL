@@ -10,17 +10,19 @@
 #include <cstddef>
 #include <ncurses.h>
 
+namespace yagol {
+
 //////////////////////////////////////////////////////////////////////
 
-class YAGoLCursesView : public YAGoLView
+class CursesView : public View
 {
   public:
-    YAGoLCursesView(char alive_char = '@', char dead_char = ' ');
-    ~YAGoLCursesView();
+    CursesView(char alive_char = '@', char dead_char = ' ');
+    ~CursesView();
 
     void set_state(size_t x, size_t y, bool state);
 
-    YAGoLEvent get_event();
+    Event get_event();
 
     bool started() const;
 
@@ -37,12 +39,14 @@ class YAGoLCursesView : public YAGoLView
     std::pair<int, int> get_size() const;
 
   private:
-    static const std::map<int, YAGoLEvent> event_map_;
+    static const std::map<int, Event> event_map_;
 
     char alive_char_;
     char dead_char_;
 };
 
 //////////////////////////////////////////////////////////////////////
+
+} // namespace yagol
 
 #endif
