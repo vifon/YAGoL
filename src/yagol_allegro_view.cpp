@@ -140,8 +140,8 @@ std::string AllegroView::prompt_for_string(std::string prompt, const unsigned in
 
 std::pair<int, int> AllegroView::get_size() const
 {
-    return std::make_pair(screen_w_ / 10,
-                          screen_h_ / 10);
+    return std::make_pair(screen_w_ / cell_size,
+                          screen_h_ / cell_size);
 }
 
 } // namespace yagol
